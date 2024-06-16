@@ -35,12 +35,12 @@ app.get("/api/:date", (req, res) => {
 
   if (date_string.match(/^[0-9]+$/)) {
     res.json({
-      unix: parseInt(date_string),
+      unix: date_string,
       utc: new Date(parseInt(date_string)).toUTCString(),
     });
   } else if (date_string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
     res.json({
-      unix: parseInt(new Date(date_string).getTime()),
+      unix: new Date(date_string).getTime(),
       utc: new Date(date_string).toUTCString(),
     });
   } else {
