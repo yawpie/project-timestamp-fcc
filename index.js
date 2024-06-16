@@ -31,17 +31,17 @@ app.get("/api/", (req, res) => {
 });
 
 app.get("/api/:date", (req, res) => {
-  const date = req.params.date;
+  const date_string = req.params.date;
 
-  if (date.match(/^[0-9]+$/)) {
+  if (date_string.match(/^[0-9]+$/)) {
     res.json({
-      unix: parseInt(date),
-      utc: new Date(parseInt(date)).toUTCString(),
+      unix: parseInt(date_string),
+      utc: new Date(parseInt(date_string)).toUTCString(),
     });
-  } else if (date.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+  } else if (date_string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
     res.json({
-      unix: parseInt(new Date(date).getTime()),
-      utc: new Date(date).toUTCString(),
+      unix: parseInt(new Date(date_string).getTime()),
+      utc: new Date(date_string).toUTCString(),
     });
   } else {
     res.json({ error: "Invalid Date" });
