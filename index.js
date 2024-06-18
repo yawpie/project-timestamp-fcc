@@ -32,31 +32,26 @@ function parseDate(dateString) {
 }
 
 app.get("/api/", (req, res) => {
-  try {
-    res.json({
-      unix: new Date().getTime(),
-      utc: new Date().toUTCString(),
-    });
-  } catch (err) {
-    res.json({ error: "Invalid Date" });
-  }
+  res.json({
+    unix: new Date().getTime(),
+    utc: new Date().toUTCString(),
+  });
 });
 
 app.get("/api/:date", (req, res) => {
   const date_string = req.params.date;
 
-  try {
-    const send = Date.parse(date_string);
-
-    if (date_string.includes("-")) {
-      res.json({ unix: send, utc: new Date(send).toUTCString() });
-    } else {
-      res.json({
-        unix: parseInt(date_string),
-        utc: new Date(parseInt(date_string)).toUTCString(),
-      });
-    }
-  } catch (err) {
+  if (date_string.match(/^[0-9]+$/)) {
+    res.json({
+      unix: parseInt(date_string),
+      utc: new Date(parseInt(date_string)).toUTCString(),
+    });
+  } else if (date_string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+    res.json({
+      unix: new Date(date_string).getTime(),
+      utc: new Date(date_string).toUTCString(),
+    });
+  } else {
     res.json({ error: "Invalid Date" });
   }
 });
