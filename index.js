@@ -31,15 +31,15 @@ function parseDate(dateString) {
   return date;
 }
 
-app.get("/api/", (req, res) => {
-  res.json({
-    unix: new Date().getTime(),
-    utc: new Date().toUTCString(),
-  });
-});
-
-app.get("/api/:date", (req, res) => {
+app.get("/api/:date?", (req, res) => {
   const date_string = req.params.date;
+
+  if (!date_string) {
+    return res.json({
+      unix: new Date().getTime(),
+      utc: new Date().toUTCString(),
+    });
+  }
 
   if (date_string.match(/^[0-9]+$/)) {
     res.json({
