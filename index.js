@@ -23,27 +23,40 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" });
 });
 
+function parseDate(dateString) {
+  let date = new Date(dateString);
+  if (isNaN(date)) {
+    throw new Error("Invalid Date");
+  }
+  return date;
+}
+
 app.get("/api/", (req, res) => {
-  res.json({
-    unix: parseInt(new Date().getTime()),
-    utc: new Date().toUTCString(),
-  });
+  try {
+    res.json({
+      unix: new Date().getTime(),
+      utc: new Date().toUTCString(),
+    });
+  } catch (err) {
+    res.json({ error: "Invalid Date" });
+  }
 });
 
 app.get("/api/:date", (req, res) => {
   const date_string = req.params.date;
 
-  if (date_string.match(/^[0-9]+$/)) {
-    res.json({
-      unix: date_string,
-      utc: new Date(parseInt(date_string)).toUTCString(),
-    });
-  } else if (date_string.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
-    res.json({
-      unix: new Date(date_string).getTime(),
-      utc: new Date(date_string).toUTCString(),
-    });
-  } else {
+  try {
+    const send = Date.parse(date_string);
+
+    if (date_string.includes("-")) {
+      res.json({ unix: send, utc: new Date(send).toUTCString() });
+    } else {
+      res.json({
+        unix: parseInt(date_string),
+        utc: new Date(parseInt(date_string)).toUTCString(),
+      });
+    }
+  } catch (err) {
     res.json({ error: "Invalid Date" });
   }
 });
